@@ -34,7 +34,9 @@ public class SpringConfig {
 
 
         //authenticate for every request put, post,delete, get
-                .authorizeHttpRequests(request -> request.anyRequest().authenticated())
+                .authorizeHttpRequests(request ->     request
+                        .requestMatchers("/update-passwords-to-bcrypt")
+                        .permitAll().anyRequest().authenticated())
         //login input enabling
                 //.formLogin(Customizer.withDefaults())
 

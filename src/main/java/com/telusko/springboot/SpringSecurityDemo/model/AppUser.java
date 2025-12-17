@@ -3,7 +3,7 @@ package com.telusko.springboot.SpringSecurityDemo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-@Entity(name = "AppUsers")
+@Entity(name = "appusers")
 public class AppUser {
 
     public AppUser(){}
