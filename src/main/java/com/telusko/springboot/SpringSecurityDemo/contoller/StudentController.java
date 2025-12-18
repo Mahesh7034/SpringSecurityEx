@@ -30,15 +30,8 @@ public class StudentController {
     @Autowired
     StudentService studentService;
 
-    private List<Student> students;
 
-    @PostConstruct
-    public void init() {
-        students = new ArrayList<>(List.of(
-                new Student(1, "mahesh", 43),
-                new Student(2, "bhopal", 98)
-        ));
-    }
+
 
 
     @GetMapping("/")
@@ -87,7 +80,7 @@ public class StudentController {
     @GetMapping("/student/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable int id) {
         Student st = studentService.getStudent(id);
-        if (st == null || students.isEmpty()) {
+        if (st == null ) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
