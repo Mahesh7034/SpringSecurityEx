@@ -26,10 +26,28 @@ public class StudentService {
         return st.orElse(null);
     }
 
-    public Student addOrUpdate(Student student) throws IOException {
 
-       return studentRepo.save(student);
+    public Student addOrUpdate(Student input)  throws IOException{
+
+        // 👉 ADD
+        if (getStudent(input.getId())== null ||input.getId() == 0) {
+            return studentRepo.save(input);   // INSERT
+        }
+
+        // 👉 UPDATE (FETCH FIRST)
+        Student dbStudent = studentRepo.findById(input.getId())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        dbStudent.setName(input.getName());
+        dbStudent.setMarks(input.getMarks());
+
+        return studentRepo.save(dbStudent);   // UPDATE (managed)
     }
+
+//    public Student addOrUpdate(Student student) throws IOException {
+//
+//       return studentRepo.save(student);
+//    }
 
     public void delete(Student st) {
 
