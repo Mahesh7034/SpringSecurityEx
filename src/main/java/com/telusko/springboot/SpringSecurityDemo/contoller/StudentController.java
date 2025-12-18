@@ -3,17 +3,20 @@ package com.telusko.springboot.SpringSecurityDemo.contoller;
 import com.telusko.springboot.SpringSecurityDemo.model.AppUser;
 import com.telusko.springboot.SpringSecurityDemo.model.Student;
 import com.telusko.springboot.SpringSecurityDemo.repo.UserDetailsRepository;
+import com.telusko.springboot.SpringSecurityDemo.service.StudentService;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,11 @@ public class StudentController {
 
     @Autowired
     UserDetailsRepository userDetailsRepository;
+
+
+    @Autowired
+    StudentService studentService;
+
     private List<Student> students;
 
     @PostConstruct
@@ -64,17 +72,63 @@ public class StudentController {
     }
 
     @GetMapping("/students")
-    public List<Student> getStudents() {
-        return students;
+    public ResponseEntity<List<Student>> getStudents() {
+
+        List<Student> students = studentService.getStudents();
+        if (students == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(students, HttpStatus.OK);
 
     }
 
 
+    @GetMapping("/student/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable int id) {
+        Student st = studentService.getStudent(id);
+        if (st == null || students.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(studentService.getStudent(id), HttpStatus.FOUND);
+    }
 
 
     @PostMapping("/student")
-    public Student add(@RequestBody Student student) {
-        students.add(student);
-        return student;
+    public ResponseEntity<Student> add(@RequestBody Student student) {
+        Student st;
+        try {
+            st = studentService.addOrUpdate(student);
+            return new ResponseEntity<>(st, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
     }
+
+    @PutMapping("/student")
+    public ResponseEntity<Student> modify(@RequestBody Student student) {
+        Student st;
+        try {
+            st = studentService.addOrUpdate(student);
+            return new ResponseEntity<>(st, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    @DeleteMapping("/student/{id}")
+    public ResponseEntity<Student> delete(@PathVariable int id) {
+        Student st;
+
+        st = studentService.getStudent(id);
+        if (st != null) {
+            studentService.delete(st);
+            return new ResponseEntity<>(st, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+
+    }
+
 }

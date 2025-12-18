@@ -1,8 +1,17 @@
 package com.telusko.springboot.SpringSecurityDemo.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
 public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+    String name;
+    int marks;
 
     public Student(int id, String name, int marks) {
         this.id = id;
@@ -43,6 +52,5 @@ public class Student {
         this.marks = marks;
     }
 
-    String name;
-    int marks;
+
 }
