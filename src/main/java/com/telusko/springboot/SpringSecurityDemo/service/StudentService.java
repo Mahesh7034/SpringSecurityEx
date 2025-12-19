@@ -30,7 +30,7 @@ public class StudentService {
     public Student addOrUpdate(Student input)  throws IOException{
 
         // 👉 ADD
-        if (getStudent(input.getId())== null ||input.getId() == 0) {
+        if (input.getId() == null || input.getId() == 0 || getStudent(input.getId())== null) {
             return studentRepo.save(input);   // INSERT
         }
 
