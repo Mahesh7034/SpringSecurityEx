@@ -40,10 +40,12 @@ public class StudentController {
 
     }
 
+
+    // Password Encoder with Strength 12 to encrypt all the passwords in DB
     @GetMapping("/update-passwords-to-bcrypt")
     @Transactional
     public String updateAllPasswordsToBcrypt() {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
         List<AppUser> users = userDetailsRepository.findAll();
 
         for (AppUser user : users) {
