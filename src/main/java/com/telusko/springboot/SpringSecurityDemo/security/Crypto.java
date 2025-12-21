@@ -17,40 +17,13 @@ public class Crypto {
     private static UserDetailsRepository userDetailsRepository;
 
 
-    public static void main(String [] args) {
+    public static void main(String[] args) {
 
         //All Users
-        List<AppUser> users  = userDetailsRepository.findAll();
 
-
-        ArrayList<String> usernames  = new ArrayList<>();
-
-        for(AppUser user : users) {
-            usernames.add(user.getUsername());
-            System.out.println(user.getUserpassword());
-            user.setUserpassword(encoder.encode(user.getUsername()));
-            userDetailsRepository.save(user);
-        }
-
-
-        List<AppUser> updatedUsers  = userDetailsRepository.findAll();
-
-
-
-      for(int i  = 0; i < updatedUsers.size(); i++ ) {
-
-
-
-            boolean isMatch = encoder.
-                    matches(usernames.get(i), updatedUsers.get(i).getUserpassword());
-          System.out.println("Does username "+ updatedUsers.get(i).getUsername()+  " match with password ? " + isMatch);
-
-
-      }
-
-
-
+        boolean isMatch = encoder.
+                matches("your guessing password", " encoded password");
+        System.out.println("Does  match with password ? " + isMatch);
 
     }
-
 }
